@@ -154,6 +154,29 @@ mod tests {
     }
 
     #[test]
+    fn theme_seeds_camel_case_field_names() {
+        let seeds = ThemeSeeds {
+            paper: "#ffffff".to_string(),
+            ink_text: "#111111".to_string(),
+            ink900: "#2a1420".to_string(),
+            on_ink: "#fbeef1".to_string(),
+            pen: "#aa3355".to_string(),
+            highlighter: "#ffee55".to_string(),
+            danger: "#cc3333".to_string(),
+            success: "#33aa55".to_string(),
+        };
+        let raw = serde_json::to_string(&seeds).unwrap();
+        assert!(raw.contains("\"paper\""));
+        assert!(raw.contains("\"inkText\""));
+        assert!(raw.contains("\"ink900\""));
+        assert!(raw.contains("\"onInk\""));
+        assert!(raw.contains("\"pen\""));
+        assert!(raw.contains("\"highlighter\""));
+        assert!(raw.contains("\"danger\""));
+        assert!(raw.contains("\"success\""));
+    }
+
+    #[test]
     fn missing_recent_files_defaults_to_empty() {
         let legacy = r#"{"autosaveToFile":true,"wordWrap":true,"fontSize":15}"#;
         let s: AppSettings = serde_json::from_str(legacy).unwrap();
