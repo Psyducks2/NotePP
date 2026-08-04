@@ -82,10 +82,10 @@ export default function App() {
         void openFiles();
       } else if (e.key.toLowerCase() === "s" && e.shiftKey) {
         e.preventDefault();
-        void saveActive(true);
+        void saveActive(true).catch(() => {});
       } else if (e.key.toLowerCase() === "s") {
         e.preventDefault();
-        void saveActive(false);
+        void saveActive(false).catch(() => {});
       } else if (e.key.toLowerCase() === "w") {
         e.preventDefault();
         void closeActiveTab();
@@ -160,8 +160,8 @@ export default function App() {
         <TitleBarMenu
           onNew={newTab}
           onOpen={() => void openFiles()}
-          onSave={() => void saveActive(false)}
-          onSaveAs={() => void saveActive(true)}
+          onSave={() => void saveActive(false).catch(() => {})}
+          onSaveAs={() => void saveActive(true).catch(() => {})}
           onFind={() => setFindOpen(true)}
           onSettings={() => setSettingsOpen(true)}
           onHistory={() => setHistoryOpen(true)}
