@@ -576,9 +576,9 @@ body,
 }
 
 .editor-host .cm-gutters {
-  background: var(--paper-sunken);
-  color: var(--muted-text);
-  border-right: 1px solid var(--line);
+  background: var(--ink-900);
+  color: #ffffff;
+  border-right: 1px solid var(--ink-700);
   min-width: 2.5rem;
 }
 
@@ -587,8 +587,8 @@ body,
 }
 
 .editor-host .cm-activeLineGutter {
-  background: var(--line);
-  color: var(--ink-text);
+  background: var(--ink-800);
+  color: #ffffff;
 }
 
 .status-bar {
