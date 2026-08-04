@@ -93,11 +93,13 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
                 min={10}
                 max={32}
                 value={fontSize}
-                onChange={(e) =>
-                  void persistCurrentSettings({
-                    fontSize: Number(e.target.value) || 15,
-                  })
-                }
+                onChange={(e) => {
+                  const parsed = Number(e.target.value);
+                  const clamped = Number.isFinite(parsed)
+                    ? Math.min(32, Math.max(10, parsed))
+                    : 15;
+                  void persistCurrentSettings({ fontSize: clamped });
+                }}
               />
             </label>
 
