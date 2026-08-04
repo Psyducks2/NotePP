@@ -10,6 +10,7 @@ import {
   type AppSettings,
   useSettingsStore,
 } from "../store/settingsStore";
+import { applyTheme, resolveActiveSeeds } from "./theme";
 
 export type SessionTab = {
   id: string;
@@ -37,6 +38,8 @@ export async function loadSettings(): Promise<AppSettings> {
       cleanupPrompt: raw.cleanupPrompt ?? defaultSettings.cleanupPrompt,
       micDeviceId: raw.micDeviceId ?? defaultSettings.micDeviceId,
       whisperUseGpu: raw.whisperUseGpu ?? defaultSettings.whisperUseGpu,
+      themeId: raw.themeId ?? defaultSettings.themeId,
+      customTheme: raw.customTheme ?? defaultSettings.customTheme,
     };
   } catch {
     return defaultSettings;
@@ -62,6 +65,8 @@ export async function persistCurrentSettings(
     cleanupPrompt,
     micDeviceId,
     whisperUseGpu,
+    themeId,
+    customTheme,
   } = useSettingsStore.getState();
   await persistSettings({
     autosaveToFile,
@@ -73,6 +78,8 @@ export async function persistCurrentSettings(
     cleanupPrompt,
     micDeviceId,
     whisperUseGpu,
+    themeId,
+    customTheme,
   });
 }
 
@@ -150,6 +157,7 @@ export function applySession(session: SessionState): void {
 export async function bootApp(): Promise<void> {
   const settings = await loadSettings();
   useSettingsStore.getState().hydrate(settings);
+  applyTheme(resolveActiveSeeds(settings.themeId, settings.customTheme));
   const session = await loadSession();
   applySession(session);
 }

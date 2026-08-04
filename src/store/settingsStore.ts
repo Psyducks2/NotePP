@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { DEFAULT_THEME_ID, type ThemeSeeds } from "../lib/theme";
 
 export type AppSettings = {
   autosaveToFile: boolean;
@@ -12,6 +13,8 @@ export type AppSettings = {
   micDeviceId: string | null;
   /** Opt-in: accelerate Whisper with GPU when the binary supports it. */
   whisperUseGpu: boolean;
+  themeId: string;
+  customTheme: ThemeSeeds | null;
 };
 
 type SettingsState = AppSettings & {
@@ -62,6 +65,8 @@ export const defaultSettings: AppSettings = {
   cleanupPrompt: DEFAULT_CLEANUP_PROMPT,
   micDeviceId: null,
   whisperUseGpu: false,
+  themeId: DEFAULT_THEME_ID,
+  customTheme: null,
 };
 
 export const useSettingsStore = create<SettingsState>((set) => ({
