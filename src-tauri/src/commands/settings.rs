@@ -38,6 +38,19 @@ REGRAS DE SAIDA:
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct ThemeSeeds {
+    pub paper: String,
+    pub ink_text: String,
+    pub ink900: String,
+    pub on_ink: String,
+    pub pen: String,
+    pub highlighter: String,
+    pub danger: String,
+    pub success: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct AppSettings {
     pub autosave_to_file: bool,
     pub word_wrap: bool,
@@ -56,10 +69,18 @@ pub struct AppSettings {
     /// Opt-in: run Whisper on GPU (Vulkan) when the binary was built with GPU support.
     #[serde(default)]
     pub whisper_use_gpu: bool,
+    #[serde(default = "default_theme_id")]
+    pub theme_id: String,
+    #[serde(default)]
+    pub custom_theme: Option<ThemeSeeds>,
 }
 
 fn default_stt_model() -> String {
     "base".to_string()
+}
+
+fn default_theme_id() -> String {
+    "aurora-rose".to_string()
 }
 
 fn default_cleanup_prompt() -> String {
@@ -78,6 +99,8 @@ impl Default for AppSettings {
             cleanup_prompt: default_cleanup_prompt(),
             mic_device_id: None,
             whisper_use_gpu: false,
+            theme_id: default_theme_id(),
+            custom_theme: None,
         }
     }
 }
@@ -124,6 +147,33 @@ mod tests {
         assert!(raw.contains("whisperUseGpu"));
         assert!(s.mic_device_id.is_none());
         assert!(!s.whisper_use_gpu);
+        assert_eq!(s.theme_id, "aurora-rose");
+        assert!(s.custom_theme.is_none());
+        assert!(raw.contains("themeId"));
+        assert!(raw.contains("customTheme"));
+    }
+
+    #[test]
+    fn theme_seeds_camel_case_field_names() {
+        let seeds = ThemeSeeds {
+            paper: "#ffffff".to_string(),
+            ink_text: "#111111".to_string(),
+            ink900: "#2a1420".to_string(),
+            on_ink: "#fbeef1".to_string(),
+            pen: "#aa3355".to_string(),
+            highlighter: "#ffee55".to_string(),
+            danger: "#cc3333".to_string(),
+            success: "#33aa55".to_string(),
+        };
+        let raw = serde_json::to_string(&seeds).unwrap();
+        assert!(raw.contains("\"paper\""));
+        assert!(raw.contains("\"inkText\""));
+        assert!(raw.contains("\"ink900\""));
+        assert!(raw.contains("\"onInk\""));
+        assert!(raw.contains("\"pen\""));
+        assert!(raw.contains("\"highlighter\""));
+        assert!(raw.contains("\"danger\""));
+        assert!(raw.contains("\"success\""));
     }
 
     #[test]
@@ -136,5 +186,7 @@ mod tests {
         assert_eq!(s.cleanup_prompt, DEFAULT_CLEANUP_PROMPT);
         assert!(s.mic_device_id.is_none());
         assert!(!s.whisper_use_gpu);
+        assert_eq!(s.theme_id, "aurora-rose");
+        assert!(s.custom_theme.is_none());
     }
 }
