@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { persistCurrentSettings } from "../lib/session";
 import { useSettingsStore } from "../store/settingsStore";
 import { ThemeSettings } from "./ThemeSettings";
@@ -16,6 +16,11 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   const wordWrap = useSettingsStore((s) => s.wordWrap);
   const fontSize = useSettingsStore((s) => s.fontSize);
   const [tab, setTab] = useState<Tab>("appearance");
+  const [fontSizeInput, setFontSizeInput] = useState(String(fontSize));
+
+  useEffect(() => {
+    setFontSizeInput(String(fontSize));
+  }, [fontSize]);
 
   if (!open) return null;
 
@@ -92,13 +97,20 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
                 type="number"
                 min={10}
                 max={32}
-                value={fontSize}
-                onChange={(e) => {
-                  const parsed = Number(e.target.value);
-                  const clamped = Number.isFinite(parsed)
+                value={fontSizeInput}
+                onChange={(e) => setFontSizeInput(e.target.value)}
+                onBlur={() => {
+                  const parsed = Number(fontSizeInput);
+                  const clamped = Number.isFinite(parsed) && fontSizeInput.trim() !== ""
                     ? Math.min(32, Math.max(10, parsed))
-                    : 15;
+                    : fontSize;
+                  setFontSizeInput(String(clamped));
                   void persistCurrentSettings({ fontSize: clamped });
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.currentTarget.blur();
+                  }
                 }}
               />
             </label>
