@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { persistCurrentSettings } from "../lib/session";
 import { useSettingsStore } from "../store/settingsStore";
+import { ThemeSettings } from "./ThemeSettings";
 import { VoiceSettings } from "./VoiceSettings";
 
 type SettingsDialogProps = {
@@ -8,13 +9,13 @@ type SettingsDialogProps = {
   onClose: () => void;
 };
 
-type Tab = "general" | "voice";
+type Tab = "appearance" | "general" | "voice";
 
 export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   const autosaveToFile = useSettingsStore((s) => s.autosaveToFile);
   const wordWrap = useSettingsStore((s) => s.wordWrap);
   const fontSize = useSettingsStore((s) => s.fontSize);
-  const [tab, setTab] = useState<Tab>("general");
+  const [tab, setTab] = useState<Tab>("appearance");
 
   if (!open) return null;
 
@@ -30,6 +31,15 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
         <h2 id="settings-title">Configurações</h2>
 
         <div className="settings-tabs" role="tablist">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={tab === "appearance"}
+            className={tab === "appearance" ? "active" : ""}
+            onClick={() => setTab("appearance")}
+          >
+            Aparência
+          </button>
           <button
             type="button"
             role="tab"
@@ -50,7 +60,9 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
           </button>
         </div>
 
-        {tab === "general" ? (
+        {tab === "appearance" ? (
+          <ThemeSettings />
+        ) : tab === "general" ? (
           <>
             <label className="setting-row">
               <input
