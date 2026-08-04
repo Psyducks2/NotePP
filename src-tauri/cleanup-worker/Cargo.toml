@@ -1,0 +1,15 @@
+[package]
+name = "cleanup-worker"
+version = "0.1.0"
+edition = "2021"
+description = "Standalone process that runs the local LLM cleanup pass. Kept out of the main notepp binary because whisper.cpp and llama.cpp each vendor their own ggml symbols, which collide if linked into the same executable."
+
+[[bin]]
+name = "cleanup-worker"
+path = "src/main.rs"
+
+[dependencies]
+llama-cpp-2 = "0.1"
+encoding_rs = "0.8"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

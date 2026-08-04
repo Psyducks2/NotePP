@@ -1,0 +1,39 @@
+[workspace]
+members = ["cleanup-worker"]
+
+[package]
+name = "notepp"
+version = "0.1.0"
+description = "NotePP — bloco de notas Linux com abas e autosave"
+authors = ["NotePP contributors"]
+edition = "2021"
+
+[lib]
+name = "notepp_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[features]
+default = []
+# Vulkan GPU for whisper.cpp. Requires at build time:
+#   sudo apt install libvulkan-dev glslc   # or libshaderc-dev / vulkan-sdk
+# Enable with: cargo build --features whisper-gpu
+whisper-gpu = ["whisper-rs/vulkan"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-dialog = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+dirs = "6"
+# PulseAudio host (PipeWire exposes the Pulse API). Prefer this over the native
+# `pipewire` feature so we don't require libpipewire-0.3-dev at build time; both
+# list the same desktop sources and share the card with the sound server.
+cpal = { version = "0.18", features = ["pulseaudio"] }
+hound = "3.5"
+whisper-rs = { version = "0.16", default-features = false }
+reqwest = { version = "0.12", default-features = false, features = ["stream", "rustls-tls"] }
+tokio = { version = "1", features = ["fs", "rt-multi-thread", "macros"] }
+futures-util = "0.3"
