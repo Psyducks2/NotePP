@@ -15,29 +15,39 @@
 }
 
 :root {
+  /* Theme seeds — overridden at runtime by applyTheme() in src/lib/theme.ts.
+     These defaults are the "Aurora Rosé" curated theme. */
+  --seed-paper: #fdf5f6;
+  --seed-ink-text: #2a1620;
+  --seed-ink-900: #2a1420;
+  --seed-on-ink: #fbeef1;
+  --seed-pen: #8e425c;
+  --seed-highlighter: #e2941f;
+  --seed-danger: #c1432e;
+  --seed-success: #2f8a5b;
+
   /* Ink chrome: navigational surfaces (toolbar, tab track, status bar) */
-  --ink-900: #12181f;
-  --ink-800: #1b2430;
-  --ink-700: #2a3542;
-  --on-ink: #f4f2ea;
-  /* ~4.6:1 on ink-900 for WCAG AA body text on status chrome */
-  --on-ink-muted: #a8b2c0;
+  --ink-900: var(--seed-ink-900);
+  --ink-800: color-mix(in srgb, var(--seed-ink-900) 85%, white 15%);
+  --ink-700: color-mix(in srgb, var(--seed-ink-900) 70%, white 30%);
+  --on-ink: var(--seed-on-ink);
+  --on-ink-muted: color-mix(in srgb, var(--seed-on-ink) 65%, var(--seed-ink-900) 35%);
 
   /* Paper canvas: content surfaces (editor, menus, dialogs, find bar) */
-  --paper: #fcfbf8;
-  --paper-sunken: #f2efe7;
-  --line: #e3ded2;
-  --ink-text: #1c2128;
-  --muted-text: #5b6472;
+  --paper: var(--seed-paper);
+  --paper-sunken: color-mix(in srgb, var(--seed-paper) 94%, var(--seed-ink-text) 6%);
+  --line: color-mix(in srgb, var(--seed-paper) 85%, var(--seed-ink-text) 15%);
+  --ink-text: var(--seed-ink-text);
+  --muted-text: color-mix(in srgb, var(--seed-ink-text) 60%, var(--seed-paper) 40%);
 
   /* Accents: one ink for interaction, one highlighter for "unsaved" */
-  --pen: #2f63d9;
-  --pen-soft: #e6edfc;
-  --highlighter: #e2941f;
-  --highlighter-soft: #fbead0;
-  --danger: #c1432e;
-  --danger-soft: #f8dfda;
-  --success: #2f8a5b;
+  --pen: var(--seed-pen);
+  --pen-soft: color-mix(in srgb, var(--seed-pen) 14%, var(--seed-paper) 86%);
+  --highlighter: var(--seed-highlighter);
+  --highlighter-soft: color-mix(in srgb, var(--seed-highlighter) 16%, var(--seed-paper) 84%);
+  --danger: var(--seed-danger);
+  --danger-soft: color-mix(in srgb, var(--seed-danger) 14%, var(--seed-paper) 86%);
+  --success: var(--seed-success);
 
   --shadow: 0 12px 28px rgba(18, 24, 31, 0.16);
   --radius: 8px;
