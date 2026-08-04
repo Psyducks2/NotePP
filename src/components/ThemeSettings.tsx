@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { persistCurrentSettings } from "../lib/session";
 import {
   applyTheme,
@@ -14,6 +14,7 @@ const ADVANCED_LABELS: { key: keyof ThemeSeeds; label: string }[] = [
   { key: "highlighter", label: "Destaque (não salvo)" },
   { key: "danger", label: "Erro" },
   { key: "success", label: "Sucesso" },
+  { key: "onInk", label: "Texto sobre fundo escuro" },
 ];
 
 const BASIC_LABELS: { key: keyof ThemeSeeds; label: string }[] = [
@@ -27,6 +28,7 @@ export function ThemeSettings() {
   const themeId = useSettingsStore((s) => s.themeId);
   const customTheme = useSettingsStore((s) => s.customTheme);
   const [advancedOpen, setAdvancedOpen] = useState(false);
+  const persistDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const selectCurated = (id: string) => {
     void persistCurrentSettings({ themeId: id });
@@ -42,8 +44,14 @@ export function ThemeSettings() {
   const updateCustomSeed = (key: keyof ThemeSeeds, value: string) => {
     const base = customTheme ?? resolveActiveSeeds(themeId, null);
     const next: ThemeSeeds = { ...base, [key]: value };
-    void persistCurrentSettings({ themeId: CUSTOM_ID, customTheme: next });
     applyTheme(next);
+
+    if (persistDebounceRef.current !== null) {
+      clearTimeout(persistDebounceRef.current);
+    }
+    persistDebounceRef.current = setTimeout(() => {
+      void persistCurrentSettings({ themeId: CUSTOM_ID, customTheme: next });
+    }, 250);
   };
 
   const activeCustomSeeds = customTheme ?? resolveActiveSeeds(themeId, null);
