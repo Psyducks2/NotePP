@@ -89,7 +89,12 @@ export async function saveActive(forceDialog = false): Promise<void> {
     });
     if (!picked) return;
     const path = ensureExtension(picked);
-    await invoke("write_text_file", { path, contents: tab.content });
+    try {
+      await invoke("write_text_file", { path, contents: tab.content });
+    } catch {
+      useTabsStore.getState().setSaveStatus("error");
+      throw new Error("Falha ao salvar");
+    }
     useTabsStore.getState().markSaved(tab.id, path, titleFromPath(path));
     await recordRecentFile(path);
     await saveTabNow(
