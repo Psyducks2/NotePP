@@ -1,8 +1,30 @@
 use std::fs;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use tauri::AppHandle;
 use tauri_plugin_dialog::{DialogExt, FilePath};
+
+/// Paths passed on the CLI when the OS opens files with NotePP (`notepp arquivo.txt`).
+#[tauri::command]
+pub fn launch_file_paths() -> Vec<String> {
+    std::env::args()
+        .skip(1)
+        .filter(|arg| !arg.starts_with('-'))
+        .filter(|arg| {
+            let path = Path::new(arg);
+            path.is_file()
+                || path
+                    .extension()
+                    .and_then(|e| e.to_str())
+                    .is_some_and(|ext| {
+                        matches!(
+                            ext.to_ascii_lowercase().as_str(),
+                            "txt" | "md" | "markdown" | "text"
+                        )
+                    })
+        })
+        .collect()
+}
 
 #[tauri::command]
 pub fn read_text_file(path: String) -> Result<String, String> {

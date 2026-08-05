@@ -2,7 +2,9 @@ mod commands;
 mod paths;
 mod voice;
 
-use commands::files::{pick_open_files, pick_save_file, read_text_file, write_text_file};
+use commands::files::{
+    launch_file_paths, pick_open_files, pick_save_file, read_text_file, write_text_file,
+};
 use commands::session::{load_session, save_session};
 use commands::settings::{load_settings, save_settings};
 use voice::audio::{list_audio_input_devices, test_microphone};
@@ -26,6 +28,7 @@ pub fn run() {
         .manage(DictationState::default())
         .manage(WhisperCache::default())
         .invoke_handler(tauri::generate_handler![
+            launch_file_paths,
             read_text_file,
             write_text_file,
             pick_open_files,

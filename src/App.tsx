@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { TabBar } from "./components/TabBar";
 import { DictationButton } from "./components/DictationButton";
@@ -42,8 +43,16 @@ export default function App() {
   const recentFiles = useSettingsStore((s) => s.recentFiles);
 
   useEffect(() => {
-    void bootApp().then(() => {
+    void bootApp().then(async () => {
       setReady(true);
+      try {
+        const launched = await invoke<string[]>("launch_file_paths");
+        if (launched.length) {
+          await openPaths(launched);
+        }
+      } catch {
+        /* browser preview */
+      }
       void updateWindowTitle();
     });
   }, []);

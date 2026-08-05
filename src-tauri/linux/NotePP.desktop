@@ -1,0 +1,11 @@
+[Desktop Entry]
+Categories=Utility;TextEditor;
+Comment=NotePP — bloco de notas Linux com abas e autosave
+Exec=notepp %F
+StartupWMClass=notepp
+Icon=notepp
+Name=NotePP
+Terminal=false
+Type=Application
+MimeType=text/plain;text/markdown;text/x-markdown;text/x-readme;
+Keywords=texto;editor;notepad;markdown;notas;

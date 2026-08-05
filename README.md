@@ -16,6 +16,23 @@ sistema de temas com a identidade Rosa/Vinho.
 
 Open source (MIT) — abra o código, corrija e recompile.
 
+## Download (Linux amd64)
+
+Pacotes prontos da [release v0.1.0](https://github.com/Psyducks2/NotePP/releases/tag/v0.1.0):
+
+| Formato | Arquivo | Uso |
+|---------|---------|-----|
+| **.deb** (Ubuntu/Debian/Mint) | [NotePP_0.1.0_amd64.deb](https://github.com/Psyducks2/NotePP/releases/download/v0.1.0/NotePP_0.1.0_amd64.deb) | `sudo dpkg -i NotePP_0.1.0_amd64.deb` |
+| **AppImage** | [NotePP_0.1.0_amd64.AppImage](https://github.com/Psyducks2/NotePP/releases/download/v0.1.0/NotePP_0.1.0_amd64.AppImage) | `chmod +x NotePP_*.AppImage && ./NotePP_*.AppImage` |
+
+Após instalar o `.deb`, o NotePP aparece no menu de aplicativos. Para usá-lo como editor padrão de `.txt` / `.md`:
+
+```bash
+xdg-mime default NotePP.desktop text/plain
+xdg-mime default NotePP.desktop text/markdown
+xdg-mime default NotePP.desktop text/x-markdown
+```
+
 ## Recursos
 
 - Abas múltiplas com sessão persistente entre reinícios
