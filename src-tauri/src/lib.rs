@@ -2,6 +2,7 @@ mod commands;
 mod paths;
 mod voice;
 
+use commands::app::quit_app;
 use commands::files::{
     launch_file_paths, pick_open_files, pick_save_file, read_text_file, write_text_file,
 };
@@ -28,6 +29,7 @@ pub fn run() {
         .manage(DictationState::default())
         .manage(WhisperCache::default())
         .invoke_handler(tauri::generate_handler![
+            quit_app,
             launch_file_paths,
             read_text_file,
             write_text_file,

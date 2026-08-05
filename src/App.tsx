@@ -115,13 +115,38 @@ export default function App() {
   useEffect(() => {
     if (!ready) return;
     let unlisten: (() => void) | undefined;
+    let closing = false;
 
     void (async () => {
       try {
         unlisten = await getCurrentWindow().onCloseRequested(async (event) => {
+          // destroy() re-enters CloseRequested. On the second pass we must NOT
+          // preventDefault or the window stays open forever.
+          if (closing) return;
+
           event.preventDefault();
-          await flushAll();
-          await getCurrentWindow().destroy();
+          closing = true;
+
+          try {
+            await Promise.race([
+              flushAll(),
+              new Promise<void>((resolve) => {
+                window.setTimeout(resolve, 1500);
+              }),
+            ]);
+          } catch {
+            /* best-effort save */
+          }
+
+          try {
+            await invoke("quit_app");
+          } catch {
+            try {
+              await getCurrentWindow().destroy();
+            } catch {
+              closing = false;
+            }
+          }
         });
       } catch {
         /* not in tauri */
